@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wristora — Elegant Watch Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#ffb703;
+    --muted:#98a0b3;
+    --glass: rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box}
+  body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial; margin:0; color:#0b1220;
+       background: linear-gradient(180deg,#0f1724 0%, #0b1220 40%), radial-gradient(circle at 10% 10%, rgba(255,183,3,0.04), transparent 6%);
+       -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; min-height:100vh;}
+  header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(90deg,#071124,rgba(7,17,36,.6));backdrop-filter: blur(6px);border-bottom:1px solid rgba(255,255,255,0.02);position:sticky;top:0;z-index:40}
+  .brand{display:flex;align-items:center;gap:12px;color:#fff}
+  .logo{width:48px;height:48px;border-radius:10px;display:grid;place-items:center;font-weight:800;color:#0b1220;background:linear-gradient(135deg,var(--accent),#ff9a00);box-shadow:0 6px 18px rgba(255,183,3,0.12)}
+  nav{display:flex;align-items:center;gap:14px}
+  nav a{color:rgba(255,255,255,0.95);text-decoration:none;font-weight:600}
+  .tools{display:flex;align-items:center;gap:10px}
+  #search{padding:8px 12px;border-radius:10px;border:none;min-width:220px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));color:#fff}
+  #search::placeholder{color:rgba(255,255,255,0.5)}
+  .icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:10px;color:#fff;cursor:pointer}
+  main{max-width:1200px;margin:28px auto;padding:0 20px}
+  .hero{display:flex;align-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));padding:28px;border-radius:14px;gap:20px;overflow:hidden}
+  .hero-left{flex:1;color:#fff}
+  .hero h1{margin:0;font-size:28px;letter-spacing:-0.4px}
+  .hero p{color:var(--muted);margin-top:8px}
+  .badges{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+  .badge{background:linear-gradient(90deg,#081426,#0d2b3e);padding:8px 12px;border-radius:10px;color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.03)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}.hero{flex-direction:column}.hero-right{width:100%}}
+  @media(max-width:600px){.grid{grid-template-columns:1fr}.logo{width:40px;height:40px}#search{min-width:120px}nav a{display:none}}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:14px;box-shadow:0 8px 30px rgba(2,6,23,0.45);color:#fff;display:flex;flex-direction:column;gap:10px;transition:transform .28s, box-shadow .28s;overflow:hidden}
+  .card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(2,6,23,0.6)}
+  .card img{width:100%;height:200px;object-fit:cover;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.45)}
+  .card h3{margin:0;font-size:18px}
+  .card .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px}
+  .card .actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:8px}
+  .btn{background:linear-gradient(90deg,var(--accent),#ff7a00);border:none;padding:8px 12px;border-radius:10px;color:#071124;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(255,122,0,0.12)}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff}
+  .muted{color:var(--muted)}
+  /* Details overlay / page */
+  .details-wrap{padding:24px;border-radius:12px;background:linear-gradient(180deg,#071124 0%, #0a2136 100%);color:#fff;box-shadow:0 30px 60px rgba(2,6,23,.6)}
+  .details-grid{display:grid;grid-template-columns:1fr 380px;gap:24px}
+  @media(max-width:980px){.details-grid{grid-template-columns:1fr}}
+  .details-img{background:linear-gradient(135deg,#0f1724,#062131);padding:16px;border-radius:12px;display:grid;place-items:center}
+  .details-img img{width:100%;max-width:420px;border-radius:12px;box-shadow:0 18px 40px rgba(2,6,23,.6)}
+  .specs{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:8px}
+  .checkout-form{display:flex;flex-direction:column;gap:10px;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px}
+  input,textarea,select{padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.02);color:#fff;outline:none}
+  label{font-size:13px;color:var(--muted);margin-top:6px}
+  .small{font-size:13px;color:var(--muted)}
+  .reviews{margin-top:16px;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px}
+  .review{padding:10px;border-bottom:1px dashed rgba(255,255,255,0.03)}
+  .faq{margin-top:12px;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px}
+  .faq-item{padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
+  footer{padding:24px;text-align:center;color:var(--muted);margin-top:30px}
+  .free-note{background:linear-gradient(90deg,#0b3a2f,#093b3a);padding:8px 12px;border-radius:8px;color:#a7ffd1;font-weight:700;border:1px solid rgba(255,255,255,0.03);display:inline-block}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand" onclick="showSection('home')" style="cursor:pointer">
+    <div class="logo">W</div>
+    <div>
+      <div style="font-weight:700">Wristora</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.6)">Fine watches • Real feel</div>
+    </div>
+  </div>
+
+  <div class="tools">
+    <input id="search" placeholder="Search watches (e.g. Chrono, Diver...)" oninput="filterProducts()">
+    <div style="display:flex;gap:8px;align-items:center;margin-left:12px">\n
+      <a class="icon-btn" href="https://instagram.com/wristora_demo" target="_blank" rel="noopener" style="margin-left:8px">Instagram</a>
+      <a class="icon-btn" href="https://twitter.com/wristora_demo" target="_blank" rel="noopener" style="margin-left:8px">Twitter</a>
+      <a class="icon-btn" href="https://facebook.com/wristora_demo" target="_blank" rel="noopener" style="margin-left:8px">Facebook</a>
+      <a class="icon-btn" href="https://wa.me/919876543210" target="_blank" rel="noopener" style="margin-left:8px">WhatsApp</a>
+
+      <button class="icon-btn" onclick="showSection('about')">About</button>
+      <button class="icon-btn" onclick="showSection('contact')">Contact</button>
+      <button class="icon-btn" onclick="showSection('cart')">Cart (<span id="cartCount">0</span>)</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero fade" style="margin-top:18px">
+    <div class="hero-left">
+      <h1>Discover timepieces that speak your style</h1>
+      <p class="muted">Curated collection — from daily classics to rugged sport watches. Click a product to view its detailed page and checkout with address.</p>
+      <div class="badges">
+        <div class="badge">Free Delivery — All orders</div>
+        <div class="badge">7-day returns</div>
+        <div class="badge">Secure checkout</div>
+      </div>
+    </div>
+    <div class="hero-right">
+      Exclusive Picks
+    </div>
+  </section>
+
+  <section id="home" style="margin-top:18px">
+    <div class="grid" id="productGrid"></div>
+  </section>
+
+  <section id="details" style="display:none;margin-top:18px">
+    <div class="details-wrap fade">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-weight:700;font-size:20px">Product details</div>
+        <div><button class="btn ghost" onclick="showSection('home')">Back to shop</button></div>
+      </div>
+      <div class="details-grid" id="detailsGrid"></div>
+      <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
+        <div class="free-note">Free delivery — one-time free delivery</div>
+        <div class="free-note">All-time free delivery for Wristora members</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cartPage" style="display:none;margin-top:18px">
+    <div class="details-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-weight:700;font-size:20px">Your Cart</div>
+        <div><button class="btn ghost" onclick="showSection('home')">Continue Shopping</button></div>
+      </div>
+      <div id="cartList"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px">
+        <button class="btn" onclick="beginCheckout()">Proceed to Checkout</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="checkout" style="display:none;margin-top:18px">
+    <div class="details-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-weight:700;font-size:20px">Checkout</div>
+        <div><button class="btn ghost" onclick="showSection('cart')">Back to cart</button></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:20px">
+        <div>
+          <div class="checkout-form">
+            <label for="fullname">Full name</label>
+            <input id="fullname" placeholder="Your full name" required>
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required>
+            <label for="address">Address</label>
+            <textarea id="address" rows="3" placeholder="Street, building, etc" required></textarea>
+            <div style="display:flex;gap:8px">
+              <div style="flex:1">
+                <label for="city">City</label>
+                <input id="city" placeholder="City" required>
+              </div>
+              <div style="width:140px">
+                <label for="pincode">Postal Code</label>
+                <input id="pincode" placeholder="PIN" required>
+              </div>
+            </div>
+            <label for="notes">Delivery notes (optional)</label>
+            <input id="notes" placeholder="Leave at reception..." >
+          </div>
+        </div>
+        <div>
+          <div style="background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:16px;border-radius:10px">
+            <div style="font-weight:700">Order summary</div>
+            <div id="checkoutSummary" style="margin-top:10px"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+              <div class="muted">Total</div>
+              <div style="font-weight:800;font-size:18px" id="checkoutTotal">₹0</div>
+            </div>
+            <div style="margin-top:12px">
+              <button class="btn" onclick="placeOrder()">Place Order</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" style="display:none;margin-top:18px">
+    <div class="details-wrap">
+      <h2>About Wristora</h2>
+      <p class="muted">Wristora is a demo boutique for watch lovers — designed to showcase product pages, cart, and checkout flow in a realistic, elegant experience.</p>
+      <p>Built for sharing: single HTML file, images hosted online.</p>
+      <h3>Contact & Office (dummy)</h3>
+      <p class="muted">Phone: +91 99999 88888</p>
+      <p class="muted">Email: support@wristora-demo.com</p>
+      <p class="muted">Address: 45 Marine Drive, Churchgate, Mumbai, Maharashtra 400020, India</p>
+    </div>
+  </section>
+
+  <section id="contact" style="display:none;margin-top:18px">
+    <div class="details-wrap">
+      <h2>Contact us</h2>
+      <p class="muted">Have questions? Send a message and we'll respond to the email in this demo (no server is connected).</p>
+      <div style="max-width:640px">
+        <input id="cname" placeholder="Your name">
+        <input id="cemail" placeholder="Your email">
+        <textarea id="cmsg" placeholder="Message" rows="4"></textarea>
+        <div style="margin-top:8px"><button class="btn" onclick="alert('Thanks — message sent (demo)')">Send</button></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; Wristora — Demo store • No real payments processed
+  
+  <div style="margin-top:12px">
+    <a href="https://instagram.com/wristora_demo" target="_blank" rel="noopener" style="margin-right:8px">Instagram</a>
+    <a href="https://twitter.com/wristora_demo" target="_blank" rel="noopener" style="margin-right:8px">Twitter</a>
+    <a href="https://facebook.com/wristora_demo" target="_blank" rel="noopener" style="margin-right:8px">Facebook</a>
+    <a href="https://wa.me/919876543210" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+
+  </footer>
+</main>
+
+<script>
+// product data (uses your postimg links) with reviews and FAQ
+const products = [
+  {id:1,name:'Aventis Chrono',price:12999,image:'https://i.postimg.cc/Xp4gLZfX/watch1.jpg',rating:4.6,
+   specs:{Material:'Stainless steel',Water:'50m',Movement:'Automatic chronograph',Glass:'Sapphire',Warranty:'2 years'},
+   desc:'A classic chronograph with refined finishing and sapphire crystal.',
+   reviews:[
+     {author:'Rohan K.',rating:5,text:'Incredible value — very accurate and looks expensive.',date:'2025-07-12'},
+     {author:'Meera S.',rating:4,text:'Great finishing; strap could be better.',date:'2025-08-03'}
+   ],
+   faq:[
+     {q:'Is the strap replaceable?', a:'Yes — standard 22mm straps fit this model.'},
+     {q:'Does it come with warranty?', a:'Yes — 2 years manufacturer warranty.'}
+   ]
+  },
+  {id:2,name:'Luna Minimal',price:7999,image:'https://i.postimg.cc/fSKmpKcy/watch2.jpg',rating:4.4,
+   specs:{Material:'Brushed alloy',Water:'30m',Movement:'Quartz',Glass:'Hardened mineral',Warranty:'1 year'},
+   desc:'Minimalist dial and premium leather strap for everyday elegance.',
+   reviews:[
+     {author:'Amit P.',rating:4,text:'Slim and elegant — pairs well with formal wear.',date:'2025-06-21'},
+     {author:'Nisha R.',rating:5,text:'Comfortable strap and clear dial.',date:'2025-07-30'}
+   ],
+   faq:[
+     {q:'Can I swim with it?', a:'No — it is splash resistant (30m) but not suitable for swimming.'},
+     {q:'Does it include extra straps?', a:'No, sold with single strap.'}
+   ]
+  },
+  {id:3,name:'Mariner Diver',price:18999,image:'https://i.postimg.cc/y3VvDWnJ/watch3.jpg',rating:4.7,
+   specs:{Material:'Titanium',Water:'200m',Movement:'Automatic',Glass:'Sapphire',Warranty:'3 years'},
+   desc:'Professional dive features with rotating bezel and lumed hands.',
+   reviews:[
+     {author:'Captain S.',rating:5,text:'Used it on dives — performed flawlessly.',date:'2025-05-10'},
+     {author:'Priya L.',rating:4,text:'Weights a bit, but feels premium.',date:'2025-09-01'}
+   ],
+   faq:[
+     {q:'Is it ISO certified?', a:'This demo model is not ISO certified but offers 200m resistance.'},
+     {q:'Does it have helium escape valve?', a:'No, it does not include a helium valve.'}
+   ]
+  },
+  {id:4,name:'Orbit Solar',price:9999,image:'https://i.postimg.cc/sB7cK5NQ/watch4.jpg',rating:4.3,
+   specs:{Material:'Composite',Water:'50m',Movement:'Solar quartz',Glass:'Hardened glass',Warranty:'2 years'},
+   desc:'Eco-friendly solar powered movement — never change a battery.',
+   reviews:[
+     {author:'Varun D.',rating:5,text:'Battery never dies — so convenient.',date:'2025-03-18'},
+     {author:'Anjali T.',rating:4,text:'Stylish and lightweight.',date:'2025-08-12'}
+   ],
+   faq:[
+     {q:'How long does a full charge last?', a:'Typically several months under normal use.'},
+     {q:'Can it be charged with indoor light?', a:'Yes, but sunlight is more efficient.'}
+   ]
+  },
+  {id:5,name:'Heritage GMT',price:14999,image:'https://i.postimg.cc/zbpTP7SB/watch5.jpg',rating:4.5,
+   specs:{Material:'Polished steel',Water:'100m',Movement:'GMT automatic',Glass:'Sapphire',Warranty:'2 years'},
+   desc:'Track two time zones with this traveler’s classic.',
+   reviews:[
+     {author:'Samir N.',rating:5,text:'Perfect for frequent flyers, very handy GMT hand.',date:'2025-04-09'},
+     {author:'Leena G.',rating:4,text:'Lovely dial with great lume.',date:'2025-06-23'}
+   ],
+   faq:[
+     {q:'Can GMT be set independently?', a:'Yes — quick-set GMT hand is available.'},
+     {q:'Is it heavy?', a:'Moderate weight due to automatic movement and steel case.'}
+   ]
+  },
+  {id:6,name:'Racer Sport',price:10999,image:'https://i.postimg.cc/Xpr9QwZj/watch6.jpg',rating:4.2,
+   specs:{Material:'Carbon fiber',Water:'100m',Movement:'Quartz chronograph',Glass:'Hardened mineral',Warranty:'1 year'},
+   desc:'Sporty chronograph with tachymeter and lightweight build.',
+   reviews:[
+     {author:'Karan V.',rating:4,text:'Great looks and stopwatch works well.',date:'2025-02-14'},
+     {author:'Maya P.',rating:3,text:'Nice design but strap is average.',date:'2025-05-29'}
+   ],
+   faq:[
+     {q:'Is tachymeter accurate?', a:'It functions as expected for casual timing.'},
+     {q:'Is the strap rubber?', a:'The demo model comes with a synthetic strap.'}
+   ]
+  }
+];
+
+// state
+let cart = JSON.parse(localStorage.getItem('wristora_cart_v3') || '[]');
+updateCartCount();
+
+function showSection(name){
+  const sections = ['home','details','cartPage','checkout','about','contact'];
+  sections.forEach(s=>{ const el = document.getElementById(s); if(!el) return; el.style.display = (s===name) ? (s==='home' ? 'block' : 'block') : 'none'; });
+  if(name==='home'){ document.getElementById('home').style.display='block'; document.getElementById('details').style.display='none'; }
+  if(name==='cart') showSection('cartPage');
+  if(name==='checkout') showSection('checkout');
+  if(name==='about') showSection('about');
+  if(name==='contact') showSection('contact');
+  renderHome();
+}
+
+// render home product grid
+function renderHome(){
+  const grid = document.getElementById('productGrid');
+  const search = document.getElementById('search').value.trim().toLowerCase();
+  const list = products.filter(p=> p.name.toLowerCase().includes(search) || p.desc.toLowerCase().includes(search));
+  grid.innerHTML = list.map(p=>`
+    <div class="card">
+      <img src="${p.image}" alt="${p.name}" loading="lazy">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>${p.name}</h3>
+        <div class="muted">★ ${p.rating} • ${p.reviews.length} reviews</div>
+      </div>
+      <div class="meta"><div class="muted">${p.desc}</div><div style="font-weight:800">₹ ${format(p.price)}</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <div class="small muted">Free Delivery</div>
+        <div class="actions">
+          <button class="btn ghost" onclick="showDetails(${p.id})">Details</button>
+          <button class="btn" onclick="addToCart(${p.id})">Add to cart</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// show individual product details with reviews and FAQ
+function showDetails(id){
+  const p = products.find(x=>x.id===id);
+  const grid = document.getElementById('detailsGrid');
+  const left = `
+    <div class="details-img">
+      <img src="${p.image}" alt="${p.name}">
+    </div>
+    <div style="margin-top:12px;color:var(--muted)">${p.desc}</div>
+    <div class="reviews">
+      <div style="font-weight:800;margin-bottom:8px">Customer reviews (${p.reviews.length})</div>
+      ${p.reviews.map(r=>`<div class="review"><div style="display:flex;justify-content:space-between"><div style="font-weight:700">${r.author}</div><div class="muted">${r.date}</div></div><div style="margin-top:6px">★ ${r.rating} — ${r.text}</div></div>`).join('')}
+    </div>
+    <div class="faq">
+      <div style="font-weight:800;margin-bottom:8px">Frequently asked questions</div>
+      ${p.faq.map(f=>`<div class="faq-item"><div style="font-weight:700">${f.q}</div><div class="muted" style="margin-top:6px">${f.a}</div></div>`).join('')}
+    </div>
+  `;
+  const specsHtml = Object.entries(p.specs).map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,0.03)"><div class="muted">${k}</div><div style="font-weight:700">${v}</div></div>`).join('');
+  const right = `
+    <div style="background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:16px;border-radius:12px">
+      <div style="font-weight:800;font-size:20px">${p.name}</div>
+      <div style="margin-top:8px">${p.desc}</div>
+      <div style="margin-top:12px;font-weight:800;font-size:18px">₹ ${format(p.price)}</div>
+      <div style="margin-top:12px" class="specs">${specsHtml}</div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn" onclick="addToCart(${p.id})">Add to cart</button>
+        <button class="btn ghost" onclick="beginCheckout()">Buy now</button>
+      </div>
+      <div style="margin-top:10px;color:var(--muted);font-size:13px">Warranty: ${p.specs.Warranty || '1 year'}</div>
+    </div>
+  `;
+  grid.innerHTML = `<div>${left}</div><div>${right}</div>`;
+  document.getElementById('home').style.display='none';
+  document.getElementById('details').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// cart functions
+function addToCart(id){
+  const product = products.find(p=>p.id===id);
+  cart.push(product);
+  localStorage.setItem('wristora_cart_v3', JSON.stringify(cart));
+  updateCartCount();
+  toast(`${product.name} added to cart`);
+}
+
+function updateCartCount(){ document.getElementById('cartCount').innerText = cart.length; }
+
+function format(n){ return n.toLocaleString('en-IN'); }
+
+function renderCart(){
+  const list = document.getElementById('cartList');
+  if(cart.length===0){ list.innerHTML = '<div class="small">Your cart is empty</div>'; return; }
+  list.innerHTML = cart.map((item,idx)=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.02)">
+      <img src="${item.image}" style="width:86px;height:64px;object-fit:cover;border-radius:8px">
+      <div style="flex:1">
+        <div style="font-weight:700">${item.name}</div>
+        <div class="muted">${item.desc}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:800">₹ ${format(item.price)}</div>
+        <button class="btn ghost" style="margin-top:8px" onclick="removeFromCart(${idx})">Remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function removeFromCart(index){
+  cart.splice(index,1);
+  localStorage.setItem('wristora_cart_v3', JSON.stringify(cart));
+  updateCartCount();
+  renderCart();
+}
+
+// checkout flow with address form
+function beginCheckout(){
+  if(cart.length===0){ toast('Cart is empty'); return; }
+  showSection('checkout');
+  renderCheckoutSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderCheckoutSummary(){
+  const el = document.getElementById('checkoutSummary');
+  el.innerHTML = cart.map(i=>`<div style="display:flex;justify-content:space-between;padding:6px 0"><div>${i.name}</div><div>₹ ${format(i.price)}</div></div>`).join('');
+  const total = cart.reduce((s,i)=>s+i.price,0);
+  document.getElementById('checkoutTotal').innerText = '₹' + format(total);
+}
+
+function placeOrder(){
+  const name = document.getElementById('fullname').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const city = document.getElementById('city').value.trim();
+  const pincode = document.getElementById('pincode').value.trim();
+  if(!name || !email || !address || !city || !pincode){ toast('Please fill all required address fields'); return; }
+
+  const order = {
+    id: 'ORD' + Date.now(),
+    name, email, address, city, pincode,
+    items: cart,
+    total: cart.reduce((s,i)=>s+i.price,0)
+  };
+  cart = [];
+  localStorage.removeItem('wristora_cart_v3');
+  updateCartCount();
+  document.getElementById('checkout').style.display='none';
+  document.getElementById('details').style.display='none';
+  const main = document.createElement('section');
+  main.className = 'details-wrap fade';
+  main.style.marginTop='18px';
+  main.innerHTML = `<div style="text-align:center;padding:40px"><h2>Thank you, ${order.name}!</h2><p class="muted">Your order <strong>${order.id}</strong> has been placed. We'll send confirmation to <strong>${order.email}</strong>.</p><div style="margin-top:18px"><button class="btn" onclick="showSection('home')">Back to shopping</button></div></div>`;
+  document.querySelector('main').appendChild(main);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// search/filter
+function filterProducts(){ renderHome(); }
+
+// small toast
+function toast(msg){
+  const t = document.createElement('div'); t.textContent = msg;
+  t.style.position='fixed'; t.style.bottom='20px'; t.style.right='20px'; t.style.background='rgba(2,6,23,0.9)'; t.style.color='#fff'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.zIndex=9999; document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2000);
+}
+
+// init
+updateCartCount();
+renderHome();
+showSection('home');
+</script>
+
+</body>
+</html>
